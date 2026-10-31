@@ -19,6 +19,7 @@
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script defer src="data/locations.js"></script>
   <script defer src="assets/site.js"></script>
+  <script defer src="assets/break-cinematic.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -94,25 +95,32 @@
     <section class="break-section" id="break-experience" aria-labelledby="break-title">
       <div class="container break-layout">
         <div class="break-copy">
-          <p class="eyebrow eyebrow-light"><span class="eyebrow-line"></span> A LITTLE SOMETHING TO PLAY</p>
-          <h2 id="break-title">Make a break.<br><em>Find your place.</em></h2>
-          <p>One rack. Thirteen clubs. Tap the black 8-ball and see where your next game could take you.</p>
+          <p class="eyebrow eyebrow-light"><span class="eyebrow-line"></span> ANOTHER WAY TO EXPLORE</p>
+          <h2 id="break-title">One break.<br><em>Thirteen places to play.</em></h2>
+          <p>A cinematic break, inspired by the game. Take your shot, then choose where to play next.</p>
           <div class="break-actions">
-            <button id="break-trigger" class="button button-accent" type="button">Break the rack <span aria-hidden="true">↗</span></button>
-            <button id="break-skip" class="break-link" type="button">Show the clubs</button>
-            <button id="break-reset" class="break-link" type="button" hidden>Re-rack ↺</button>
+            <button id="break-trigger" type="button" class="button button-accent">Take your shot <span aria-hidden="true">↗</span></button>
+            <button id="break-skip" type="button" class="break-link">Just show locations</button>
+            <button id="break-reset" type="button" class="break-link" hidden>Play again ↺</button>
           </div>
-          <p class="break-access-note">Just for fun—the full location list is always available below.</p>
+          <p class="break-access-note">Optional · No sound · The regular directory is right below.</p>
         </div>
-        <div class="break-play" aria-label="Interactive pool break game">
-          <div class="break-table" id="break-table">
-            <span class="break-pocket pocket-a" aria-hidden="true"></span><span class="break-pocket pocket-b" aria-hidden="true"></span><span class="break-pocket pocket-c" aria-hidden="true"></span><span class="break-pocket pocket-d" aria-hidden="true"></span><span class="break-pocket pocket-e" aria-hidden="true"></span><span class="break-pocket pocket-f" aria-hidden="true"></span>
-            <span class="break-cue-line" aria-hidden="true"></span>
-            <span class="break-cue-ball" aria-hidden="true"></span>
-            <div id="break-rack" class="break-rack" aria-label="Pool balls"></div>
-            <span class="break-corner-note">TAP THE 8 TO BREAK</span>
+        <div class="break-play" id="break-play">
+          <div class="break-stage" id="break-stage" aria-label="Cinematic 3D pool break">
+            <canvas id="break-canvas" aria-hidden="true"></canvas>
+            <button class="break-poster" id="break-photo-trigger" type="button" aria-label="Take your shot: watch a cinematic 3D pool break and explore locations">
+              <img src="assets/images/break-eight.webp" alt="" loading="eager" decoding="async">
+              <span class="break-poster-shade" aria-hidden="true"></span>
+              <span class="break-poster-brand" aria-hidden="true">A.S. POOL &amp; SNOOKER</span>
+              <span class="break-poster-action" aria-hidden="true"><span class="break-play-icon">↗</span><strong>TAP TO BREAK</strong><small>13 CLUBS TO DISCOVER</small></span>
+              <span class="break-poster-foot" aria-hidden="true">THE NEXT SHOT IS YOURS</span>
+            </button>
+            <span class="break-stage-note" id="break-stage-note" aria-hidden="true">THE BREAK · IN MOTION</span>
           </div>
-          <div id="break-results" class="break-results" hidden aria-label="Locations revealed from the break"></div>
+          <div id="break-results" class="break-results" hidden aria-label="Choose from the thirteen club locations">
+            <div class="break-results-heading"><strong>Where will you play?</strong><span>Choose a location to see photos and directions</span></div>
+            <div id="break-results-grid" class="break-results-grid"></div>
+          </div>
           <p class="sr-only" id="break-live-status" role="status" aria-live="polite"></p>
         </div>
       </div>

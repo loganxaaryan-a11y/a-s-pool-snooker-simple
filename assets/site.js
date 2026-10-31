@@ -94,63 +94,6 @@
   function fitMap(){if(!map)return;const pts=visibleLocations().filter(l=>validGeo(l)).map(l=>[l.lat,l.lng]);if(pts.length)map.fitBounds(pts,{padding:[38,38],maxZoom:12});}
 
 
-  // Optional, unobtrusive pool break: 8-ball reveals the 13 QR-listed locations.
-  // The normal directory remains available without playing.
-  function initBreakExperience(){
-    const section=$('#break-experience'),table=$('#break-table'),rack=$('#break-rack'),result=$('#break-results');
-    const trigger=$('#break-trigger'),reset=$('#break-reset'),skip=$('#break-skip');
-    if(!section||!table||!rack||!result||!trigger||!reset||!skip)return;
-    const colors=['#e7be45','#dc7541','#325bab','#19805b','#b63f3b','#684b90','#d9a83a','#111412','#c44e46','#2f78ab','#c8863b','#28835b','#9b4f8d'];
-    const initial=[[59,50],[64,43],[64,57],[69,36],[69,50],[69,64],[74,29],[74,43],[74,57],[74,71],[79,36],[79,50],[79,64]];
-    const scattered=[[19,19],[43,23],[65,16],[85,28],[23,47],[44,43],[67,44],[87,61],[16,79],[37,75],[57,82],[75,79],[52,59]];
-    const makeBall=(loc,index)=>{
-      const ball=document.createElement('button');ball.type='button';
-      ball.className='break-ball'+(index===7?' is-eight':'');
-      ball.style.setProperty('--start-x',initial[index][0]+'%');ball.style.setProperty('--start-y',initial[index][1]+'%');
-      ball.style.setProperty('--end-x',scattered[index][0]+'%');ball.style.setProperty('--end-y',scattered[index][1]+'%');
-      ball.style.setProperty('--ball-color',colors[index]);
-      ball.dataset.ball=String(loc.id);
-      ball.setAttribute('aria-label',index===7?'Break the rack with the black 8-ball':'Ball '+loc.id+' — reveal locations after the break');
-      ball.tabIndex=index===7?0:-1;ball.disabled=index!==7;
-      ball.innerHTML='<span>'+ (index===7?'8':String(loc.id))+'</span>';
-      return ball;
-    };
-    rack.replaceChildren(...locations.map(makeBall));
-    let animationTimer=null;
-    let isBroken=false;
-    function showResults(){
-      if(!isBroken)return;
-      result.hidden=false;
-      section.classList.add('is-revealed');
-      trigger.hidden=true;reset.hidden=false;skip.hidden=true;
-      $$('.break-ball',rack).forEach(b=>{b.disabled=false;b.tabIndex=0;b.setAttribute('aria-label','Explore '+locations.find(l=>l.id===Number(b.dataset.ball)).name)});
-      $('#break-live-status').textContent='The 13 clubs are ready. Choose a location by name or ball.';
-    }
-    function doBreak(skipAnimation=false){
-      if(isBroken)return;
-      isBroken=true;
-      section.classList.add('is-broken');
-      trigger.disabled=true;
-      $('#break-live-status').textContent='The break reveals 13 clubs.';
-      if(skipAnimation||reduceMotion)showResults();
-      else animationTimer=window.setTimeout(showResults,850);
-    }
-    function reRack(){
-      if(animationTimer)window.clearTimeout(animationTimer);
-      isBroken=false;section.classList.remove('is-broken','is-revealed');
-      result.hidden=true;trigger.hidden=false;trigger.disabled=false;skip.hidden=false;reset.hidden=true;
-      $$('.break-ball',rack).forEach((b,i)=>{b.disabled=i!==7;b.tabIndex=i===7?0:-1;b.setAttribute('aria-label',i===7?'Break the rack with the black 8-ball':'Ball '+locations[i].id)});
-      $('#break-live-status').textContent='Rack reset. Activate the black 8-ball to break.';
-    }
-    function showLocation(id){openClubDialog(id);}
-    result.innerHTML=locations.map((loc,i)=>`<button class="break-location" type="button" data-break-location="${loc.id}" aria-label="Explore ${escapeHTML(loc.name)}"><span class="break-result-ball" style="--ball-color:${colors[i]}">${String(loc.id).padStart(2,'0')}</span><span>${escapeHTML(loc.name)}</span><span class="break-result-arrow" aria-hidden="true">↗</span></button>`).join('');
-    rack.addEventListener('click',e=>{const b=e.target.closest('[data-ball]');if(!b)return;if(!isBroken){if(Number(b.dataset.ball)===8)doBreak();}else showLocation(Number(b.dataset.ball));});
-    trigger.addEventListener('click',()=>doBreak());
-    skip.addEventListener('click',()=>doBreak(true));
-    reset.addEventListener('click',reRack);
-    result.addEventListener('click',e=>{const button=e.target.closest('[data-break-location]');if(button)showLocation(Number(button.dataset.breakLocation));});
-  }
-
   let lastClubFocus=null;
   function openClubDialog(id){
     const loc=locations.find(l=>l.id===Number(id));if(!loc)return;
@@ -174,6 +117,7 @@
   let startX=null;
   function bind(){
     $('#year').textContent=String(new Date().getFullYear());
+    document.addEventListener('as:open-club',e=>openClubDialog(e.detail.id));
     const menu=$('#menu-toggle'),mobile=$('#mobile-nav');
     menu.addEventListener('click',()=>{const isOpen=menu.getAttribute('aria-expanded')==='true';menu.setAttribute('aria-expanded',String(!isOpen));menu.setAttribute('aria-label',isOpen?'Open menu':'Close menu');mobile.hidden=isOpen;});
     $$('#mobile-nav a').forEach(a=>a.addEventListener('click',()=>{mobile.hidden=true;menu.setAttribute('aria-expanded','false');menu.setAttribute('aria-label','Open menu');}));
@@ -197,5 +141,5 @@
     $('#contact-form').addEventListener('submit',e=>{e.preventDefault();if(!e.currentTarget.reportValidity())return;const data=new FormData(e.currentTarget);const subject=`A.S. Pool & Snooker Club — ${data.get('type')}`;const message=`Name: ${data.get('name')}\nEmail: ${data.get('email')}\nEnquiry: ${data.get('type')}\n\n${data.get('message')}`;window.location.href=`mailto:arvindkhant3588@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
-  function start(){bind();renderLocations();renderGallery();initMap();initBreakExperience();}
+  function start(){bind();renderLocations();renderGallery();initMap();}
 })();

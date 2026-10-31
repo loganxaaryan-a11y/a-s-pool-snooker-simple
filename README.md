@@ -19,6 +19,7 @@ For a quick local preview, open `index.html` or run `python -m http.server 8000`
 - Individual club-detail overlays with three representative photos, contact and directions.
 - Fully working gallery with filters, keyboard/lightbox controls and mobile swipe; optimized enhanced-image WebP assets.
 - About, visit and events/contact sections, with a truthful **mailto** interaction (opens the visitor's email application; no backend/form submission).
+- A dedicated optional WebGL 3D break scene with a moving perspective camera, a white ball striking the black 8-ball, the 8-ball scattering the rack, and 13 linked branch choices; no third-party animation libraries.
 - The old Kimi/Argon reference HTML is intentionally excluded from this public upload package. Keep your previous archive separately for rollback.
 
 ## Important owner-verification checklist BEFORE going live
@@ -74,8 +75,16 @@ https://qr2.me-qr.com/link-list/PR155wep/show
 
 **QR link quality:** the QR directory's K.K. Nagar Google link appears to point to Hocco Eatery; Bopal's points to TRP Mall rather than an A.S. club pin. For these we use explicit A.S. Google Maps search links instead of sending customers to the wrong business. Owner should confirm these, plus exact addresses for K.K. Nagar and Sindhu Bhavan.
 
-### Optional break interaction
-A modest in-page interactive pool break now sits above the main directory. Tap the black 8-ball (or the Break button): 13 balls scatter, and reveal a grid of 13 named, clickable branches. Each opens the existing club detail panel. It does not auto-play, gate site content, navigate unexpectedly, or require canvas/audio. Reduced-motion preferences bypass the animation, and the original searchable directory remains available.
+### Optional 3D break experience (2026-10-31 iteration 3)
+The black 8-ball photograph supplied for the project is the opening poster. The user chooses **Take your shot** or taps the photo; the photo moves forward and transitions to a **self-contained WebGL 3D illustration**, not a 2D canvas fake or a prerecorded video. The camera starts low near the black ball, a white cue ball rolls into it, the black ball moves into the rack, and the other balls scatter while the camera rises. After ~4.5 seconds the 13 existing location buttons are revealed, opening real club detail overlays.
+
+- No autoplay, no audio, no required interaction. **Just show locations** reveals all 13 instantly; **Play again** resets. Respect reduced-motion settings.
+- Uses WebGL 1 rather than a heavy third-party 3D package, so the whole static site can run on GitHub Pages without a build system, paid video generator, or third-party shader downloads.
+- Browsers with disabled/unavailable WebGL immediately show the branch list on interaction instead of leaving a broken black canvas. The normal directory is independent in all cases.
+- The 3D environment is a **stylized, physically inspired illustration**, not a photorealistic recording and not an exact 3D model of a particular branch. The real supplied 8-ball photo remains the opening poster.
+- Performance and visual quality vary by device. Tested with Chromium/WebGL 1 using software GPU simulation and with mobile viewport, including location opening, replay, Skip and keyboard-friendly buttons. Verify on a real iPhone before client sign-off.
+- Main animation source: `assets/break-cinematic.js`. The rest of the Kimi redesign and 13-branch data are preserved.
+
 
 The remaining 11 map coordinates were carried over from the Kimi research draft and remain approximate until independently confirmed. The two new entries omit unverified coordinates and phone numbers rather than guessing.
 

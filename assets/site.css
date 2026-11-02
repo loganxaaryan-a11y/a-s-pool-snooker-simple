@@ -67,3 +67,14 @@
 .break-play.is-playing .break-poster{transition:opacity .72s ease-out,transform .8s ease-out;transform:scale(1.025)}
 .break-play.is-playing .break-poster img{transform:scale(1.13) translateY(2%);transition:transform .85s cubic-bezier(.2,.6,.1,1)}
 @media(prefers-reduced-motion:reduce){.break-play.is-playing .break-poster,.break-play.is-playing .break-poster img{transition:none;transform:none}}
+
+/* Club identity: owner-supplied logo, framed for contrast on all backgrounds. */
+.club-logo{display:block;flex:none;width:50px;height:46px;object-fit:contain;border-radius:8px;border:1px solid #e6cd8e70;background:#a3acc5;box-shadow:0 3px 12px #0003}
+.footer-brand .club-logo{width:60px;height:55px}
+@media(max-width:590px){.brand{gap:8px}.brand .club-logo{width:42px;height:40px}.brand-name{font-size:12px}}
+
+/* A calmer, room-led variation of the classic design. */
+.hero-image{object-position:62% 50%}
+.hero-shade{background:linear-gradient(90deg,#071c16f7 0%,#09251fdf 38%,#0b2d2277 68%,#10281f38 100%),linear-gradient(0deg,#06170fa6,transparent 55%)}
+.hero-copy{max-width:660px}.hero h1{font-size:clamp(53px,6.4vw,90px);letter-spacing:-.06em}.hero h1 em{color:#f1d495}
+@media(max-width:590px){.hero-image{object-position:58% center}.hero-shade{background:linear-gradient(90deg,#071b16eb,#0a241bc9),linear-gradient(0deg,#06170fa6,transparent)}.hero h1{font-size:clamp(38px,10.2vw,61px)}}

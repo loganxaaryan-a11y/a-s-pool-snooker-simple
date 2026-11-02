@@ -188,20 +188,15 @@
     const ids=[0,8,1,2,3,4,5,6,7,9,10,11,12,13,14,15];
     const R=.295;
     function rack(){
-      balls=[];
-      balls.push({id:0,x:0,z:-5.65,vx:0,vz:0});
-      balls.push({id:8,x:0,z:-1.8,vx:0,vz:0});
-      let ix=2;
-      const rackIds=[1,2,3,4,5,6,7,9,10,11,12,13,14,15];
+      balls=[{id:0,x:.045,z:-5.65,vx:0,vz:0}];
+      // Full 8-ball rack: the 8 is in the center, with opposite groups at the back corners.
+      const rackIds=[1,10,3,6,8,14,12,7,2,15,4,13,5,9,11];
       let k=0;
       for(let row=0;row<5;row++)for(let j=0;j<=row;j++){
-        // Reserve one ball: black 8-ball started in the foreground instead.
-        if(ix>=16)break;
-        const x=(j-row/2)*(R*2+.015);
-        const z=2.65+row*(Math.sqrt(3)*R+.012);
-        balls.push({id:rackIds[k++],x,z,vx:0,vz:0});ix++;
+        const x=(j-row/2)*(R*2+.002);
+        const z=1.45+row*(Math.sqrt(3)*(R+.001));
+        balls.push({id:rackIds[k++],x,z,vx:0,vz:0});
       }
-      // Fifteen physical balls in all: one white, one black, 14 in rack.
     }
     function size(){
       const b=stage.getBoundingClientRect();if(b.width<5)return;
@@ -217,8 +212,8 @@
     }
     function physics(dt){
       const count=balls.length;
-      if(physicsElapsed<.46 && physicsElapsed+dt>=.46)balls[0].vz=6.15;
-      const damp=Math.exp(-dt*(breakImpact?1.15:.18));
+      if(physicsElapsed<.46 && physicsElapsed+dt>=.46)balls[0].vz=13.5;
+      const damp=Math.exp(-dt*(breakImpact?.55:.18));
       for(let i=0;i<count;i++){
         let b=balls[i];b.x+=b.vx*dt;b.z+=b.vz*dt;
         b.vx*=damp;b.vz*=damp;
@@ -231,7 +226,7 @@
         const A=balls[a],B=balls[j];const dx=B.x-A.x,dz=B.z-A.z;
         const dsq=dx*dx+dz*dz;if(dsq>(2*R+.01)**2)continue;
         const dist=Math.max(.00001,Math.sqrt(dsq)),nx=dx/dist,nz=dz/dist;
-        const overlap=2*R-dist;
+        const overlap=Math.max(0,2*R-dist);
         A.x-=nx*overlap*.5;B.x+=nx*overlap*.5;
         A.z-=nz*overlap*.5;B.z+=nz*overlap*.5;
         const rv=(B.vx-A.vx)*nx+(B.vz-A.vz)*nz;
@@ -239,29 +234,19 @@
         const impulse=-(1+.93)*rv*.5;
         A.vx-=impulse*nx;A.vz-=impulse*nz;
         B.vx+=impulse*nx;B.vz+=impulse*nz;
-        if(!impact&&(a===0||j===0)){impact=true;status.textContent='The white ball strikes the black 8-ball.';}
-        if(!breakImpact && (a===1||j===1) && a>=1 && j>=2){
-          breakImpact=true;status.textContent='The black ball hits the rack; balls scatter across the table.';
-          // Slight real-world off-center transfer produces a fuller visual break.
-          for(let k=2;k<count;k++){
-            const a=(k-2)*2.39996; // phyllotaxis: visually pleasing, nonuniform scatter
-            const strength=2.4+(k%4)*.42;
-            balls[k].vx+=Math.sin(a)*strength;
-            balls[k].vz+=Math.cos(a)*strength + .25;
-          }
+        if(!impact&&(A.id===0||B.id===0)){
+          impact=true;breakImpact=true;
+          status.textContent='The cue ball strikes the front ball of the rack; the balls scatter.';
         }
       }
     }
     const e=(a,b,t)=>smooth(a,b,t);
     function camera(t){
-      // A moving physical camera: macro 8-ball -> tracking shot -> overhead reveal.
-      const s=e(.65,2.3,t),q=e(1.55,3.1,t);
-      const eye=[lerp(0,1.2,s),lerp(1.08,5.5,s),lerp(-4.4,-2.8,s)];
-      const look=[lerp(0,0,s),lerp(.34,0.0,s),lerp(-1.76,2.6,s)];
-      eye[0]=lerp(eye[0],.25,q);eye[1]=lerp(eye[1],11.0,q);eye[2]=lerp(eye[2],-1.6,q);
-      look[2]=lerp(look[2],1.4,q);
-      if(portrait){eye[1]*=1.23;eye[2]-=.65;}
-      return {eye,look,fov:lerp(portrait?44:47,portrait?58:56,e(1.0,2.65,t))};
+      // Keep the cue ball and rack in view through first contact.
+      const q=e(.85,2.8,t);
+      const eye=[lerp(.7,1.9,q),lerp(portrait?10.8:9,6.5,q),lerp(-9,-7,q)];
+      const look=[0,0,lerp(-.2,1.3,q)];
+      return {eye,look,fov:portrait?57:55};
     }
     function draw(t){
       if(!render)return;
@@ -312,7 +297,7 @@
       mode='playing';trigger.disabled=true;poster.disabled=true;
       play.classList.add('is-playing');note.textContent='THE SHOT · IN MOTION';
       elapsed=0;physicsElapsed=0;last=0;startAt=0;impact=false;breakImpact=false;
-      status.textContent='3D pool break: cue ball rolling toward the 8-ball.';
+      status.textContent='3D pool break: cue ball rolling toward the full rack.';
       frame=requestAnimationFrame(loop);
     }
     function rerack(){

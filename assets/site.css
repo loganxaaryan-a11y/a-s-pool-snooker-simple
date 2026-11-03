@@ -78,3 +78,28 @@
 .hero-shade{background:linear-gradient(90deg,#071c16f7 0%,#09251fdf 38%,#0b2d2277 68%,#10281f38 100%),linear-gradient(0deg,#06170fa6,transparent 55%)}
 .hero-copy{max-width:660px}.hero h1{font-size:clamp(53px,6.4vw,90px);letter-spacing:-.06em}.hero h1 em{color:#f1d495}
 @media(max-width:590px){.hero-image{object-position:58% center}.hero-shade{background:linear-gradient(90deg,#071b16eb,#0a241bc9),linear-gradient(0deg,#06170fa6,transparent)}.hero h1{font-size:clamp(38px,10.2vw,61px)}}
+
+/* Presentation polish: brighter club identity and restrained interaction detail. */
+:root{--brand-highlight:#f8d98e;--brand-glow:#edc86b30}
+.club-logo,.as-logo{filter:brightness(1.16) saturate(1.25) contrast(1.08);border-color:var(--brand-highlight);box-shadow:0 0 0 3px #ffffff0a,0 5px 18px #0003,0 0 22px var(--brand-glow);transition:filter .25s ease,box-shadow .25s ease,transform .25s ease}
+.brand-name,.brand-words b{color:#fff}
+.brand-name small,.brand-words small{color:var(--brand-highlight)}
+.site-header{box-shadow:0 5px 24px #00000018}
+.desktop-nav a{position:relative;padding-block:10px}
+.desktop-nav a::after{content:"";position:absolute;left:0;right:0;bottom:3px;height:2px;background:var(--brand-highlight);transform:scaleX(0);transform-origin:left;transition:transform .22s ease}
+.desktop-nav a.is-active::after,.desktop-nav a:focus-visible::after{transform:scaleX(1)}
+.button-accent{box-shadow:0 4px 16px #0002}
+.button:active{transform:translateY(0)}
+.location-card:focus-within{box-shadow:0 0 0 3px var(--brand-highlight),0 16px 35px #0003}
+.search-box:focus-within{border-color:var(--brand-highlight);box-shadow:0 0 0 3px var(--brand-glow)}
+.contact-form input:focus-visible,.contact-form select:focus-visible,.contact-form textarea:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.location-card-actions a,.menu-toggle{min-height:44px}
+.gallery-disclaimer{color:#596d60}
+@media(hover:hover) and (pointer:fine){
+ .brand:hover .club-logo,.brand:hover .as-logo{filter:brightness(1.22) saturate(1.35) contrast(1.08);transform:translateY(-2px);box-shadow:0 0 0 3px #ffffff12,0 7px 22px #0003,0 0 30px var(--brand-glow)}
+ .desktop-nav a:hover::after{transform:scaleX(1)}
+ .button-accent:hover{box-shadow:0 7px 24px #0003}
+}
+@media(max-width:800px){.contact-form input,.contact-form textarea,.contact-form select,.search-box input{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.club-logo,.as-logo,.desktop-nav a::after{transition:none!important}.brand:hover .club-logo,.brand:hover .as-logo{transform:none}}
+
